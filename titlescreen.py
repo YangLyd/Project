@@ -11,6 +11,7 @@ pygame.init()
 white = (255, 255, 255)
 light_grey = (170,170,170)
 dark_grey = (100,100,100)
+light_blue = (125, 239, 255)
 
 
 #initialize size of display
@@ -43,6 +44,11 @@ title_background = pygame.image.load("backgrounds/titlepagebackground3.png")
 title_background = pygame.transform.scale(title_background, size)
 main_menu_background = pygame.image.load("backgrounds/mainmenubackground.png")
 main_menu_background = pygame.transform.scale(main_menu_background, size)
+instructions_background = pygame.image.load("backgrounds/instructionsbackground.png")
+instructions_background = pygame.transform.scale(instructions_background, size)
+
+#loading sprites
+
 
 # stores the width of the screen into a variable
 width = gameDisplay.get_width()
@@ -58,7 +64,7 @@ def text_objects(text, font):
 
 #----------------------------------------------------------------------------------------------------------
 
-def button(function, text, fontsize, x, y, w, h, inactive_colour, active_colour):
+def button(function, text, fontsize, x, y, w, h, inactive_colour, active_colour,special):
     
     #defines coordinates of mouse action
     mouse = pygame.mouse.get_pos()
@@ -79,18 +85,32 @@ def button(function, text, fontsize, x, y, w, h, inactive_colour, active_colour)
                 quiz()
             if function == "game":
                 game()
-            if function() == "instructions":
+            if function == "instructions":
                 instructions()
+            if function == "settings":
+                settings()
+            if function == "quit":
+                credits()
     #checks if mouse is not in coordinates of button
     else:
         pygame.draw.rect(gameDisplay, inactive_colour, [x, y, w, h])
+        
+    if special == "home":
+        home_button = pygame.image.load("sprites/house.png")
+        home_button = pygame.transform.scale(home_button, (w,h))
+        gameDisplay.blit(home_button, (x,y))
+    if special == "settings":
+        settings_button = pygame.image.load("sprites/settings.png")
+        settings_button = pygame.transform.scale(settings_button, (w,h))
+        gameDisplay.blit(settings_button, (x,y))
     
-    #draws text on the button
-    smallText = pygame.font.Font("OriginTech.ttf", fontsize)
-    textSurf, textRect = text_objects(text, smallText)
-    #Centers the text on the button
-    textRect.center = ( (x + (w/2)), (y + (h/2)))
-    gameDisplay.blit(textSurf, textRect)    
+    if special == "none":
+        #draws text on the button
+        smallText = pygame.font.Font("OriginTech.ttf", fontsize)
+        textSurf, textRect = text_objects(text, smallText)
+        #Centers the text on the button
+        textRect.center = ( (x + (w/2)), (y + (h/2)))
+        gameDisplay.blit(textSurf, textRect)    
     
 #----------------------------------------------------------------------------------------------------------
 # Title screen loop
@@ -105,7 +125,7 @@ def TitleScreen():
                 quit()
         gameDisplay.fill(white)
         gameDisplay.blit(title_background, (0,0))
-        button("main_menu", "Main Menu", 40, 150, 600, 300, 75, dark_grey, light_grey)
+        button("main_menu", "Main Menu", 40, 150, 600, 300, 75, dark_grey, light_grey, "none")
 
         # Update display
         pygame.display.update()        
@@ -124,10 +144,12 @@ def main_menu():
         gameDisplay.blit(main_menu_background, (0,0))
         
         #draws buttons
-        button("animation", "Animation/Lesson",50,50,50,600,200, dark_grey, light_grey)
-        button("quiz", "Quiz",100,700,50,600,200, dark_grey, light_grey)
-        button("game", "Interactive Game",50,50,300,600,200, dark_grey, light_grey)
-        button("instructions", "Instructions",50,700,300,600,200, dark_grey, light_grey)
+        button("animation", "Animation/Lesson",50,50,50,600,200, dark_grey, light_grey, "none")
+        button("quiz", "Quiz",100,700,50,600,200, dark_grey, light_grey, "none")
+        button("game", "Interactive Game",50,50,300,600,200, dark_grey, light_grey, "none")
+        button("instructions", "Instructions",50,700,300,600,200, dark_grey, light_grey, "none")
+        button("settings", " ",0,50,625,75,75, light_grey, white, "settings")
+        button("quit", "Quit",25, 1150, 650, 150, 50, dark_grey, light_grey, "none")
         #updates the display
         pygame.display.flip()
         clock.tick(60)        
@@ -138,22 +160,32 @@ def instructions():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-        message_display("This is your tutorial")
-        #draws the background and images 
-        gameDisplay.blit(background_level1, (0, 0))
+        gameDisplay.blit(instructions_background, (0, 0))
+        button("main_menu", " ",0,1250,20,85,85, light_grey, white, "home") #home button
         
-        ########################################################
-        # Your working animation should go here.
-                
-                
-        
-        ##########################################################        
-        #button to return to main menu
-        button("main_menu", "Main Menu", 40, 150, 600, 300, 75, dark_grey, light_grey)       
-                
         #updates the display
         pygame.display.flip()
-        clock.tick(60)        
+        clock.tick(60)       
 
+#----------------------------------------------------------------------------------------------------------
+
+def quiz():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+#----------------------------------------------------------------------------------------------------------
+def settings():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        #Background Music Player (looped)
+        mixer.music.load('music/backgroundmusic.wav')
+        mixer.music.set_volume(0.5)
+        mixer.music.play(-1, 0.0)    
+#----------------------------------------------------------------------------------------------------------               
 #loads the titlescreen
 TitleScreen()
