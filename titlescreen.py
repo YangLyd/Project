@@ -12,6 +12,8 @@ white = (255, 255, 255)
 light_grey = (170,170,170)
 dark_grey = (100,100,100)
 light_blue = (125, 239, 255)
+red = (214, 43, 43)
+green = (43, 214, 43)
 
 
 #initialize size of display
@@ -46,6 +48,12 @@ main_menu_background = pygame.image.load("backgrounds/mainmenubackground.png")
 main_menu_background = pygame.transform.scale(main_menu_background, size)
 instructions_background = pygame.image.load("backgrounds/instructionsbackground.png")
 instructions_background = pygame.transform.scale(instructions_background, size)
+quiz_background = pygame.image.load("backgrounds/quizbackground.png")
+quiz_background = pygame.transform.scale(quiz_background, size)
+animation_background = pygame.image.load("backgrounds/animationbackground.png")
+animation_background = pygame.transform.scale(animation_background, size)
+game_background = pygame.image.load("backgrounds/gamebackground.png")
+game_background = pygame.transform.scale(game_background, size)
 
 #loading sprites
 
@@ -90,7 +98,7 @@ def button(function, text, fontsize, x, y, w, h, inactive_colour, active_colour,
             if function == "settings":
                 settings()
             if function == "quit":
-                credits()
+                credits_quit()
     #checks if mouse is not in coordinates of button
     else:
         pygame.draw.rect(gameDisplay, inactive_colour, [x, y, w, h])
@@ -110,8 +118,18 @@ def button(function, text, fontsize, x, y, w, h, inactive_colour, active_colour,
         textSurf, textRect = text_objects(text, smallText)
         #Centers the text on the button
         textRect.center = ( (x + (w/2)), (y + (h/2)))
-        gameDisplay.blit(textSurf, textRect)    
-    
+        gameDisplay.blit(textSurf, textRect)
+#----------------------------------------------------------------------------------------------------------
+def text(fontsize,text1,text2,color,x,y,w,h):
+        pygame.draw.rect(gameDisplay, color, [x, y, w, h])
+        #draws text on the button
+        smallText = pygame.font.Font("OriginTech.ttf", fontsize)
+        textSurf1, textRect1 = text_objects(text1, smallText)
+        textRect1 = (x+50 , y+50)
+        gameDisplay.blit(textSurf1, textRect1)
+        textSurf2, textRect2 = text_objects(text2, smallText)
+        textRect2 = (x+50 , y+50+fontsize)
+        gameDisplay.blit(textSurf2, textRect2)       
 #----------------------------------------------------------------------------------------------------------
 # Title screen loop
 def TitleScreen():
@@ -144,15 +162,139 @@ def main_menu():
         gameDisplay.blit(main_menu_background, (0,0))
         
         #draws buttons
-        button("animation", "Animation/Lesson",50,50,50,600,200, dark_grey, light_grey, "none")
-        button("quiz", "Quiz",100,700,50,600,200, dark_grey, light_grey, "none")
-        button("game", "Interactive Game",50,50,300,600,200, dark_grey, light_grey, "none")
-        button("instructions", "Instructions",50,700,300,600,200, dark_grey, light_grey, "none")
+        button("animation", "Animation/Lesson",50,100,50,500,150, dark_grey, light_grey, "none")
+        button("quiz", "Quiz",75,750,50,500,150, dark_grey, light_grey, "none")
+        button("game", "Interactive Game",50,100,300,500,150, dark_grey, light_grey, "none")
+        button("instructions", "Instructions",50,750,300,500,150, dark_grey, light_grey, "none")
         button("settings", " ",0,50,625,75,75, light_grey, white, "settings")
         button("quit", "Quit",25, 1150, 650, 150, 50, dark_grey, light_grey, "none")
         #updates the display
         pygame.display.flip()
         clock.tick(60)        
+#----------------------------------------------------------------------------------------------------------
+def animation():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()   
+        gameDisplay.blit(animation_background, (0,0))
+        button("main_menu", " ",0,1250,20,85,85, light_grey, white, "home") #home button
+        
+        #updates the display
+        pygame.display.flip()
+        clock.tick(60)
+#----------------------------------------------------------------------------------------------------------
+def quizbuttons(q1,q2,q3,q4,correct):
+    #defines coordinates of mouse action
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    
+    #CONTROLS FOR QUESTION 1-----------------------------------------------
+    
+    if 150 <= mouse[0] <= 150+450 and 300 <= mouse[1] <= 300+100:
+        #draws button in active colour
+        pygame.draw.rect(gameDisplay, light_grey, [150, 300, 450, 100])
+        #checks if user left clicks on the button
+        if click[0] == 1:
+            if correct == "q1":
+                return True
+            else:
+                return False
+    else:
+        pygame.draw.rect(gameDisplay, dark_grey, [150, 300, 450, 100])
+    smallText = pygame.font.Font("OriginTech.ttf", 25)
+    textSurf, textRect = text_objects(q1, smallText)
+    #Centers the text on the button
+    textRect.center = ( (150 + (450/2)), (300 + (100/2)))
+    gameDisplay.blit(textSurf, textRect)
+
+    #CONTROLS FOR QUESTION 2-----------------------------------------------
+    
+    if 150 <= mouse[0] <= 150+450 and 450 <= mouse[1] <= 450+100:
+        #draws button in active colour
+        pygame.draw.rect(gameDisplay, light_grey, [150, 450, 450, 100])
+        #checks if user left clicks on the button
+        if click[0] == 1:
+            if correct == "q2":
+                return True
+            else:
+                return False
+    else:
+        pygame.draw.rect(gameDisplay, dark_grey, [150, 450, 450, 100])
+    smallText = pygame.font.Font("OriginTech.ttf", 25)
+    textSurf, textRect = text_objects(q2, smallText)
+    #Centers the text on the button
+    textRect.center = ( (150 + (450/2)), (450 + (100/2)))
+    gameDisplay.blit(textSurf, textRect)
+    
+    #CONTROLS FOR QUESTION 3-----------------------------------------------
+    
+    if 750 <= mouse[0] <= 750+450 and 300 <= mouse[1] <= 300+100:
+        #draws button in active colour
+        pygame.draw.rect(gameDisplay, light_grey, [750, 300, 450, 100])
+        #checks if user left clicks on the button
+        if click[0] == 1:
+            if correct == "q3":
+                return True
+            else:
+                return False
+    else:
+        pygame.draw.rect(gameDisplay, dark_grey, [750, 300, 450, 100])
+    smallText = pygame.font.Font("OriginTech.ttf", 25)
+    textSurf, textRect = text_objects(q3, smallText)
+    #Centers the text on the button
+    textRect.center = ( (750 + (450/2)), (300 + (100/2)))
+    gameDisplay.blit(textSurf, textRect)    
+
+    #CONTROLS FOR QUESTION 4-----------------------------------------------
+    
+    if 750 <= mouse[0] <= 750+450 and 450 <= mouse[1] <= 450+100:
+        #draws button in active colour
+        pygame.draw.rect(gameDisplay, light_grey, [750, 450, 450, 100])
+        #checks if user left clicks on the button
+        if click[0] == 1:
+            if correct == "q4":
+                return True
+            else:
+                return False
+    else:
+        pygame.draw.rect(gameDisplay, dark_grey, [750, 450, 450, 100])
+    smallText = pygame.font.Font("OriginTech.ttf", 25)
+    textSurf, textRect = text_objects(q4, smallText)
+    #Centers the text on the button
+    textRect.center = ( (750 + (450/2)), (450 + (100/2)))
+    gameDisplay.blit(textSurf, textRect)
+#----------------------------------------------------------------------------------------------------------
+def quiz():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        gameDisplay.blit(quiz_background, (0,0))
+        correct_answers = 0
+        button("main_menu", " ",0,1250,20,85,85, light_grey, white, "home") #home button
+        text(50,"1. What was the original name","of the ISS in 1984?",dark_grey, 150, 50, 1050, 200)
+        if quizbuttons("a) American Space Station","b) World Space Station","c) Space Station Freedom","d) Adventure Space Station","q3"):
+            correct_answers += 1
+            print(correct_answers)
+        #updates the display
+        pygame.display.flip()
+        clock.tick(60)         
+#----------------------------------------------------------------------------------------------------------
+def game():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        gameDisplay.blit(animation_background, (0,0))
+        button("main_menu", " ",0,1250,20,85,85, light_grey, white, "home") #home button
+        
+        #updates the display
+        pygame.display.flip()
+        clock.tick(60)           
 #----------------------------------------------------------------------------------------------------------
 def instructions():
     while True:
@@ -166,15 +308,6 @@ def instructions():
         #updates the display
         pygame.display.flip()
         clock.tick(60)       
-
-#----------------------------------------------------------------------------------------------------------
-
-def quiz():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
 #----------------------------------------------------------------------------------------------------------
 def settings():
     while True:
@@ -186,6 +319,15 @@ def settings():
         mixer.music.load('music/backgroundmusic.wav')
         mixer.music.set_volume(0.5)
         mixer.music.play(-1, 0.0)    
-#----------------------------------------------------------------------------------------------------------               
+#----------------------------------------------------------------------------------------------------------
+def credits_quit():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        quit()
+
+#----------------------------------------------------------------------------------------------------------
 #loads the titlescreen
 TitleScreen()
